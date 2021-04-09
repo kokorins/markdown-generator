@@ -123,6 +123,16 @@ class MdTest : FunSpec({
         """.trimIndent()
     }
 
+    test("horizontal line") {
+        val line = Md.HorizontalLine
+        val visitor = TextVisitor()
+        line.accept(visitor)
+        visitor.render() shouldBe """
+            ---
+            
+        """.trimIndent()
+    }
+
     test("paragraph-with-full-link-reference") {
         val paragraph = Md.Paragraph().apply {
             link("text", "url", "label")

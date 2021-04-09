@@ -262,39 +262,3 @@ object Md {
         return document
     }
 }
-
-fun main() {
-    val doc = Md.generate {
-        title {
-            +"Title"
-        }
-        line()
-        h(2) {
-            +"Header 2"
-        }
-        p {
-            +"This is the main paragraph. " + i("Italics") + " and " + b("Bold") + "is an option."
-            br()
-            +"Link is " + link("here", ".") + " on a new line."
-            br()
-            +"Image is " + image("text", ".") + " on a new line."
-        }
-        itemize {
-            item {
-                +"Item 1. " + ib("Bold and Italic.")
-            }
-            item {
-                +"Item 2. " + image("with text", ".") + "."
-            }
-        }
-        enumerate {
-            item {
-                +"Item 1 " + link("with link", ".") + "."
-            }
-            item {
-                +"Item 2."
-            }
-        }
-    }
-    println(doc.asString())
-}

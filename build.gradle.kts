@@ -2,6 +2,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     kotlin("jvm") version "1.4.32"
+    jacoco
 }
 
 repositories {
@@ -16,7 +17,6 @@ tasks {
 
 val slf4j = "1.7.30"
 val kotest = "4.4.3"
-val kotlin = "1.4.32"
 
 dependencies {
     implementation(kotlin("stdlib"))
@@ -28,6 +28,14 @@ dependencies {
     testImplementation("io.kotest:kotest-assertions-core-jvm:$kotest")
 }
 
+tasks.test {
+    finalizedBy(tasks.jacocoTestReport)
+}
+
+tasks.jacocoTestReport {
+    dependsOn(tasks.test)
+}
+
 tasks.withType<Test> { useJUnitPlatform() }
 
 task("fat-jar", Jar::class) {
@@ -35,7 +43,6 @@ task("fat-jar", Jar::class) {
     manifest {
         attributes["Implementation-Title"] = "Markdown Generator"
         attributes["Implementation-Version"] = archiveVersion
-        attributes["Main-Class"] = "me.md.MainKt"
     }
     exclude("META-INF/*.RSA", "META-INF/*.SF", "META-INF/*.DSA")
     from(configurations.runtimeClasspath.get().map { if (it.isDirectory) it else zipTree(it) })
