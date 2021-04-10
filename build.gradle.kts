@@ -1,9 +1,13 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
+    maven // for jitpack
+    `maven-publish` // for jitpack
     kotlin("jvm") version "1.4.32"
     jacoco
 }
+
+group = "com.github.kokorins"
 
 repositories {
     mavenCentral()
