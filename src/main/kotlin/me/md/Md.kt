@@ -85,11 +85,6 @@ object Md {
             return this
         }
 
-        fun br(): Paragraph {
-            return Paragraph().add(this)
-        }
-
-
         operator fun String.unaryPlus(): Sentence {
             return text(this)
         }
@@ -160,6 +155,10 @@ object Md {
             current = Sentence()
             sentences.add(current)
             return this
+        }
+
+        fun Sentence.br(): Paragraph {
+            return this@Paragraph.br()
         }
 
         operator fun String.unaryPlus(): Sentence {

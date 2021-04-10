@@ -22,8 +22,8 @@ class MdTest : FunSpec({
 
     test("paragraph") {
         val paragraph = Md.Paragraph().apply {
-            +"t"; br()
-            text("t"); br()
+            (+"t").br()
+            text("t").br()
             b("b"); br()
             i("i"); br()
             ib("ib"); br()
