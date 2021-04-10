@@ -20,10 +20,6 @@ class TextVisitor : MdVisitor {
         builder.appendLine("---")
     }
 
-    override fun visit(newLine: Md.NewLine) {
-        builder.appendLine()
-    }
-
     override fun visit(text: Md.Text) {
         builder.append(text.text)
     }

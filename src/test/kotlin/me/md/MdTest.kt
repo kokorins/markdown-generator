@@ -20,6 +20,15 @@ class MdTest : FunSpec({
         visitor.render() shouldBe "tt**b**_i_***ib***[l](l)![i](i)"
     }
 
+    test("sum of sentences") {
+        val sentence = Md.Sentence().apply {
+            text("Hello").plus(Md.Sentence().text(" World"))
+        }
+        val visitor = TextVisitor()
+        sentence.accept(visitor)
+        visitor.render() shouldBe "Hello World"
+    }
+
     test("paragraph") {
         val paragraph = Md.Paragraph().apply {
             (+"t").br()
@@ -83,6 +92,28 @@ class MdTest : FunSpec({
             ![text](url)
         """.trimIndent()
     }
+    
+    test("image-short-link") {
+        val link = Md.Link("text", "url", true, "text")
+        val visitor = TextVisitor()
+        link.accept(visitor)
+        visitor.render() shouldBe """
+            ![text]
+            [text]: url
+            
+        """.trimIndent()
+    }
+    
+    test("image-full-link") {
+        val link = Md.Link("text", "url", true, "1")
+        val visitor = TextVisitor()
+        link.accept(visitor)
+        visitor.render() shouldBe """
+            ![text][1]
+            [1]: url
+            
+        """.trimIndent()
+    }
 
     test("itemize") {
         val itemize = Md.Itemize()
@@ -133,6 +164,19 @@ class MdTest : FunSpec({
         """.trimIndent()
     }
 
+    test("paragraph-adds") {
+        val paragraph = Md.Paragraph().apply {
+            add(Md.Sentence().text("text"))
+        }
+        val visitor = TextVisitor()
+        paragraph.accept(visitor)
+        visitor.render() shouldBe """
+            text
+            
+            
+        """.trimIndent()
+    }
+
     test("paragraph-with-full-link-reference") {
         val paragraph = Md.Paragraph().apply {
             link("text", "url", "label")
@@ -149,11 +193,13 @@ class MdTest : FunSpec({
 
     test("code block") {
         val doc = Md.generate {
-            code("kotlin", """
-                fun main() {
-                    println("Hello world")
-                }
-            """.trimIndent())
+            code("kotlin") {
+            """
+            fun main() {
+                println("Hello world")
+            }
+            """.trimIndent()
+            }
         }
         doc.asString() shouldBe """
             ```kotlin
@@ -164,6 +210,23 @@ class MdTest : FunSpec({
             
         """.trimIndent()
     }
+
+    test("code without language") {
+        val doc = Md.generate {
+            code {
+            """
+            some code
+            """.trimIndent()
+            }
+        }
+        doc.asString() shouldBe """
+            ```
+            some code
+            ```
+            
+        """.trimIndent()
+    }
+
 
     test("doc") {
         val doc = Md.generate {
@@ -176,6 +239,8 @@ class MdTest : FunSpec({
             p {
                 +"This is a small test of how it looks like."
             }
+
+            line()
 
             itemize {
                 item {
@@ -205,6 +270,8 @@ class MdTest : FunSpec({
             ## Introduction
             
             This is a small test of how it looks like.
+            
+            ---
             
             - Just an item [link 1](url1)
             

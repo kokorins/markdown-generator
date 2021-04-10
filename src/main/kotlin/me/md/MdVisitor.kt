@@ -2,7 +2,6 @@ package me.md
 
 interface MdVisitor {
     fun visit(horizontalLine: Md.HorizontalLine)
-    fun visit(newLine: Md.NewLine)
     fun visit(text: Md.Text)
     fun visit(wrappedText: Md.WrappedText)
     fun visit(link: Md.Link)

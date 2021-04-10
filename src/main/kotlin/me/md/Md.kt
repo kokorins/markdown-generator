@@ -44,13 +44,7 @@ object Md {
         }
     }
 
-    object NewLine : MdElement {
-        override fun accept(visitor: MdVisitor) {
-            visitor.visit(this)
-        }
-    }
-
-    class Sentence : MdContainer() {
+   class Sentence : MdContainer() {
         override fun accept(visitor: MdVisitor) {
             visitor.visit(this)
         }
@@ -103,10 +97,10 @@ object Md {
     }
 
     data class Link(
-        val text: String,
-        val url: String,
-        val inPlace: Boolean,
-        val label: String? = null
+            val text: String,
+            val url: String,
+            val inPlace: Boolean,
+            val label: String? = null
     ) : MdElement {
         override fun accept(visitor: MdVisitor) {
             visitor.visit(this)
@@ -240,8 +234,8 @@ object Md {
             add(Blockquotes().apply(block))
         }
 
-        fun code(language: String = "", listing: String) {
-            add(WrappedText("```", "$language\n$listing\n"))
+        fun code(language: String = "", listing: () -> String) {
+            add(WrappedText("```", "$language\n${listing()}\n"))
         }
 
         override fun accept(visitor: MdVisitor) {
