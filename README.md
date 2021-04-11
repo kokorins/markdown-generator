@@ -55,3 +55,14 @@ This is a small test of how it looks like.
 [link 2]: url2
             
 ```
+
+## Installation
+
+[![](https://jitpack.io/v/kokorins/markdown-generator.svg)](https://jitpack.io/#kokorins/markdown-generator)
+
+```kotlin
+dependencies {
+    implementation("com.github.kokorins:markdown-generator:v0.1.0")
+}
+```
+
