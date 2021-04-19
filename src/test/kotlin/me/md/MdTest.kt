@@ -227,6 +227,21 @@ class MdTest : FunSpec({
         """.trimIndent()
     }
 
+    test("link examples") {
+        val doc = Md.generate {
+            p {
+                link("text", "url", "text")
+            }
+        }.asString()
+        doc shouldBe """
+            [text]
+            
+            
+            [text]: url
+            
+        """.trimIndent()
+    }
+
 
     test("doc") {
         val doc = Md.generate {

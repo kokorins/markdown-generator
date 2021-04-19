@@ -1,5 +1,7 @@
 # markdown-generator
 
+[![](https://jitpack.io/v/kokorins/markdown-generator.svg)](https://jitpack.io/#kokorins/markdown-generator)
+
 Simple library to generate markdown from kotlin.
 
 It allows transform code like:
