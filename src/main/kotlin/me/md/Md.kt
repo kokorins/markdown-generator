@@ -44,9 +44,30 @@ object Md {
         }
     }
 
-   class Sentence : MdContainer() {
+    class Sentence : MdContainer() {
         override fun accept(visitor: MdVisitor) {
             visitor.visit(this)
+        }
+
+        fun asText(): String? {
+            return if(isText()) {
+                val textVisitor = TextVisitor()
+                accept(textVisitor)
+                textVisitor.render()
+            } else {
+                null
+            }
+        }
+
+        fun isText(): Boolean {
+            return elements.all {
+                return when (it) {
+                    is Text -> true
+                    is WrappedText -> true
+                    is Sentence -> it.isText()
+                    else -> false
+                }
+            }
         }
 
         fun text(text: String): Sentence {
@@ -105,7 +126,8 @@ object Md {
         constructor(text: String,
                     url: String,
                     inPlace: Boolean,
-                    label: String? = null): this(Sentence().text(text), url, inPlace, label)
+                    label: String? = null) : this(Sentence().text(text), url, inPlace, label)
+
         override fun accept(visitor: MdVisitor) {
             visitor.visit(this)
         }
@@ -124,12 +146,12 @@ object Md {
             visitor.visit(this)
         }
 
-        fun link(url: String, label: String? = null, text: Sentence.()->Sentence): Sentence {
+        fun link(url: String, label: String? = null, text: Sentence.() -> Sentence): Sentence {
             current.add(Link(text(Sentence()), url, false, label))
             return current
         }
 
-        fun image(url: String, label: String? = null, text: Sentence.()->Sentence): Sentence {
+        fun image(url: String, label: String? = null, text: Sentence.() -> Sentence): Sentence {
             current.add(Link(text(Sentence()), url, true, label))
             return current
         }

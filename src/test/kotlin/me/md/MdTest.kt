@@ -73,7 +73,7 @@ class MdTest : FunSpec({
         """.trimIndent()
     }
 
-    test("link-short-reference").config(enabled = false) {
+    test("link-short-reference") {
         val link = Md.Link("label", "url", false, "label")
         val visitor = TextVisitor()
         link.accept(visitor)
@@ -93,7 +93,7 @@ class MdTest : FunSpec({
         """.trimIndent()
     }
 
-    test("image-short-link").config(enabled = false) {
+    test("image-short-link") {
         val link = Md.Link("text", "url", true, "text")
         val visitor = TextVisitor()
         link.accept(visitor)
@@ -236,8 +236,6 @@ class MdTest : FunSpec({
             }
         }.asString()
 
-        println(doc)
-
         doc shouldBe """
             ![[img](img-url)](url)
             
@@ -245,7 +243,7 @@ class MdTest : FunSpec({
         """.trimIndent()
     }
 
-    test("link-examples").config(enabled = false) {
+    test("link-examples") {
         val doc = Md.generate {
             p {
                 link("text", "url", "text")
@@ -261,7 +259,7 @@ class MdTest : FunSpec({
     }
 
 
-    test("doc").config(enabled = false) {
+    test("doc") {
         val doc = Md.generate {
             title {
                 +"My Markdown Document"
