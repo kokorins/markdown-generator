@@ -55,12 +55,12 @@ object Md {
         }
 
         fun link(text: String, url: String, label: String? = null): Sentence {
-            add(Link(text, url, false, label))
+            add(Link(Sentence().text(text), url, false, label))
             return this
         }
 
         fun image(text: String, url: String, label: String? = null): Sentence {
-            add(Link(text, url, true, label))
+            add(Link(Sentence().text(text), url, true, label))
             return this
         }
 
@@ -97,11 +97,15 @@ object Md {
     }
 
     data class Link(
-            val text: String,
+            val text: Sentence,
             val url: String,
             val inPlace: Boolean,
             val label: String? = null
     ) : MdElement {
+        constructor(text: String,
+                    url: String,
+                    inPlace: Boolean,
+                    label: String? = null): this(Sentence().text(text), url, inPlace, label)
         override fun accept(visitor: MdVisitor) {
             visitor.visit(this)
         }
@@ -120,13 +124,23 @@ object Md {
             visitor.visit(this)
         }
 
+        fun link(url: String, label: String? = null, text: Sentence.()->Sentence): Sentence {
+            current.add(Link(text(Sentence()), url, false, label))
+            return current
+        }
+
+        fun image(url: String, label: String? = null, text: Sentence.()->Sentence): Sentence {
+            current.add(Link(text(Sentence()), url, true, label))
+            return current
+        }
+
         fun link(text: String, url: String, label: String? = null): Sentence {
-            current.add(Link(text, url, false, label))
+            current.add(Link(Sentence().text(text), url, false, label))
             return current
         }
 
         fun image(text: String, url: String, label: String? = null): Sentence {
-            current.add(Link(text, url, true, label))
+            current.add(Link(Sentence().text(text), url, true, label))
             return current
         }
 

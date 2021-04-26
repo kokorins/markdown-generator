@@ -14,7 +14,14 @@ repositories {
 
 tasks {
     withType<KotlinCompile> {
-        kotlinOptions.jvmTarget = JavaVersion.VERSION_11.toString()
+        kotlinOptions.jvmTarget = "11"
+    }
+    withType<Test> {
+        testLogging {
+            outputs.upToDateWhen { false }
+            showStandardStreams = true
+        }
+        useJUnitPlatform()
     }
 }
 
@@ -38,8 +45,6 @@ tasks.test {
 tasks.jacocoTestReport {
     dependsOn(tasks.test)
 }
-
-tasks.withType<Test> { useJUnitPlatform() }
 
 task("fat-jar", Jar::class) {
     archiveBaseName.set("md-generator")

@@ -33,22 +33,27 @@ class TextVisitor : MdVisitor {
     override fun visit(link: Md.Link) {
         if (link.label != null) { // reference
             links[link.label] = LinkDefinition(link.label, link.url)
-            if (link.label == link.text) { // short reference
+            // TODO: short reference
+//            if (link.label == link.text) { // short reference
+//                if (link.inPlace) {
+//                    builder.append("!")
+//                }
+//                builder.append("[${link.text}]")
+//            } else { // full reference
                 if (link.inPlace) {
                     builder.append("!")
                 }
-                builder.append("[${link.text}]")
-            } else { // full reference
-                if (link.inPlace) {
-                    builder.append("!")
-                }
-                builder.append("[${link.text}][${link.label}]")
-            }
+                builder.append("[")
+                link.text.accept(this)
+                builder.append("][${link.label}]")
+//            }
         } else {
             if (link.inPlace) {
                 builder.append("!")
             }
-            builder.append("[${link.text}](${link.url})")
+            builder.append("[")
+            link.text.accept(this)
+            builder.append("](${link.url})")
         }
     }
 
