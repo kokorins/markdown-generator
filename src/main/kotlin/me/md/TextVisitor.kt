@@ -20,17 +20,17 @@ class TextVisitor : MdVisitor {
         builder.appendLine("---")
     }
 
-    override fun visit(text: Md.Text) {
+    override fun visit(text: Md.Word.Text) {
         builder.append(text.text)
     }
 
-    override fun visit(wrappedText: Md.WrappedText) {
+    override fun visit(wrappedText: Md.Word.WrappedText) {
         builder.append(wrappedText.wrap)
         builder.append(wrappedText.text)
         builder.append(wrappedText.wrap)
     }
 
-    override fun visit(link: Md.Link) {
+    override fun visit(link: Md.Word.Link) {
         if (link.label != null) { // reference
             links[link.label] = LinkDefinition(link.label, link.url)
             val text = link.text.asText()
@@ -75,7 +75,7 @@ class TextVisitor : MdVisitor {
     }
 
     override fun visit(itemize: Md.Itemize) {
-        itemize.sentences.forEach { sentence ->
+        itemize.elements.forEach { sentence ->
             builder.append("- ")
             sentence.accept(this)
             builder.appendLine()
@@ -83,7 +83,7 @@ class TextVisitor : MdVisitor {
     }
 
     override fun visit(enumerate: Md.Enumerate) {
-        enumerate.sentences.forEachIndexed { index, sentence ->
+        enumerate.elements.forEachIndexed { index, sentence ->
             builder.append("${index + 1}. ")
             sentence.accept(this)
             builder.appendLine()
@@ -91,7 +91,7 @@ class TextVisitor : MdVisitor {
     }
 
     override fun visit(blockquotes: Md.Blockquotes) {
-        blockquotes.sentences.forEach { sentence ->
+        blockquotes.elements.forEach { sentence ->
             builder.append("> ")
             sentence.accept(this)
             builder.appendLine()

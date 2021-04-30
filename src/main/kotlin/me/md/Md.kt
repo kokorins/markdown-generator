@@ -10,33 +10,26 @@ object Md {
         fun accept(visitor: MdVisitor)
     }
 
-    abstract class MdContainer : MdElement {
-        val elements = mutableListOf<MdElement>()
-        fun add(element: MdElement): MdElement {
+    abstract class MdContainer<T: MdElement> : MdElement {
+        val elements = mutableListOf<T>()
+        fun add(element: T): MdContainer<T> {
             elements.add(element)
             return this
         }
-    }
 
-    abstract class MdSentenceContainer : MdElement {
-        val sentences = mutableListOf<Sentence>()
-        fun add(element: Sentence): MdElement {
-            sentences.add(element)
+        fun addAll(elements: List<T>): MdContainer<T> {
+            this.elements.addAll(elements)
             return this
         }
     }
 
-    data class Text(val text: String) : MdElement {
-        override fun accept(visitor: MdVisitor) {
-            visitor.visit(this)
-        }
-    }
-
-    data class WrappedText(val wrap: String, val text: String) : MdElement {
-        override fun accept(visitor: MdVisitor) {
-            visitor.visit(this)
-        }
-    }
+//    abstract class MdSentenceContainer : MdElement {
+//        val sentences = mutableListOf<Sentence>()
+//        fun add(element: Sentence): MdElement {
+//            sentences.add(element)
+//            return this
+//        }
+//    }
 
     object HorizontalLine : MdElement {
         override fun accept(visitor: MdVisitor) {
@@ -44,7 +37,37 @@ object Md {
         }
     }
 
-    class Sentence : MdContainer() {
+    sealed class Word: MdElement {
+        data class Text(val text: String) : Word() {
+            override fun accept(visitor: MdVisitor) {
+                visitor.visit(this)
+            }
+        }
+
+        data class WrappedText(val wrap: String, val text: String) : Word() {
+            override fun accept(visitor: MdVisitor) {
+                visitor.visit(this)
+            }
+        }
+
+        data class Link(
+                val text: Sentence,
+                val url: String,
+                val inPlace: Boolean,
+                val label: String? = null
+        ) : Word() {
+            constructor(text: String,
+                        url: String,
+                        inPlace: Boolean,
+                        label: String? = null) : this(Sentence().text(text), url, inPlace, label)
+
+            override fun accept(visitor: MdVisitor) {
+                visitor.visit(this)
+            }
+        }
+    }
+
+    class Sentence : MdContainer<Word>() {
         override fun accept(visitor: MdVisitor) {
             visitor.visit(this)
         }
@@ -62,41 +85,40 @@ object Md {
         fun isText(): Boolean {
             return elements.all {
                 return when (it) {
-                    is Text -> true
-                    is WrappedText -> true
-                    is Sentence -> it.isText()
-                    else -> false
+                    is Word.Text -> true
+                    is Word.WrappedText -> true
+                    is Word.Link -> false
                 }
             }
         }
 
         fun text(text: String): Sentence {
-            add(Text(text))
+            add(Word.Text(text))
             return this
         }
 
         fun link(text: String, url: String, label: String? = null): Sentence {
-            add(Link(Sentence().text(text), url, false, label))
+            add(Word.Link(Sentence().text(text), url, false, label))
             return this
         }
 
         fun image(text: String, url: String, label: String? = null): Sentence {
-            add(Link(Sentence().text(text), url, true, label))
+            add(Word.Link(Sentence().text(text), url, true, label))
             return this
         }
 
         fun i(text: String): Sentence {
-            add(WrappedText("_", text))
+            add(Word.WrappedText("_", text))
             return this
         }
 
         fun b(text: String): Sentence {
-            add(WrappedText("**", text))
+            add(Word.WrappedText("**", text))
             return this
         }
 
         fun ib(text: String): Sentence {
-            add(WrappedText("***", text))
+            add(Word.WrappedText("***", text))
             return this
         }
 
@@ -106,30 +128,14 @@ object Md {
 
         operator fun plus(sentence: Sentence): Sentence {
             if (this != sentence) {
-                add(sentence)
+                addAll(sentence.elements)
             }
             return this
         }
 
         operator fun plus(text: String): Sentence {
-            add(Text(text))
+            add(Word.Text(text))
             return this
-        }
-    }
-
-    data class Link(
-            val text: Sentence,
-            val url: String,
-            val inPlace: Boolean,
-            val label: String? = null
-    ) : MdElement {
-        constructor(text: String,
-                    url: String,
-                    inPlace: Boolean,
-                    label: String? = null) : this(Sentence().text(text), url, inPlace, label)
-
-        override fun accept(visitor: MdVisitor) {
-            visitor.visit(this)
         }
     }
 
@@ -147,37 +153,37 @@ object Md {
         }
 
         fun link(url: String, label: String? = null, text: Sentence.() -> Sentence): Sentence {
-            current.add(Link(text(Sentence()), url, false, label))
+            current.add(Word.Link(text(Sentence()), url, false, label))
             return current
         }
 
         fun image(url: String, label: String? = null, text: Sentence.() -> Sentence): Sentence {
-            current.add(Link(text(Sentence()), url, true, label))
+            current.add(Word.Link(text(Sentence()), url, true, label))
             return current
         }
 
         fun link(text: String, url: String, label: String? = null): Sentence {
-            current.add(Link(Sentence().text(text), url, false, label))
+            current.add(Word.Link(Sentence().text(text), url, false, label))
             return current
         }
 
         fun image(text: String, url: String, label: String? = null): Sentence {
-            current.add(Link(Sentence().text(text), url, true, label))
+            current.add(Word.Link(Sentence().text(text), url, true, label))
             return current
         }
 
         fun i(text: String): Sentence {
-            current.add(WrappedText("_", text))
+            current.add(Word.WrappedText("_", text))
             return current
         }
 
         fun b(text: String): Sentence {
-            current.add(WrappedText("**", text))
+            current.add(Word.WrappedText("**", text))
             return current
         }
 
         fun ib(text: String): Sentence {
-            current.add(WrappedText("***", text))
+            current.add(Word.WrappedText("***", text))
             return current
         }
 
@@ -196,7 +202,7 @@ object Md {
         }
 
         fun text(text: String): Sentence {
-            current.add(Text(text))
+            current.add(Word.Text(text))
             return current
         }
 
@@ -208,7 +214,7 @@ object Md {
         }
     }
 
-    class Itemize : MdSentenceContainer() {
+    class Itemize : MdContainer<Sentence>() {
         override fun accept(visitor: MdVisitor) {
             visitor.visit(this)
         }
@@ -219,7 +225,7 @@ object Md {
         }
     }
 
-    class Enumerate : MdSentenceContainer() {
+    class Enumerate : MdContainer<Sentence>() {
         override fun accept(visitor: MdVisitor) {
             visitor.visit(this)
         }
@@ -230,7 +236,7 @@ object Md {
         }
     }
 
-    class Blockquotes : MdSentenceContainer() {
+    class Blockquotes : MdContainer<Sentence>() {
         override fun accept(visitor: MdVisitor) {
             visitor.visit(this)
         }
@@ -241,7 +247,7 @@ object Md {
         }
     }
 
-    class Document : MdContainer() {
+    class Document : MdContainer<MdElement>() {
         fun line() {
             add(HorizontalLine)
         }
@@ -271,7 +277,7 @@ object Md {
         }
 
         fun code(language: String = "", listing: () -> String) {
-            add(WrappedText("```", "$language\n${listing()}\n"))
+            add(Word.WrappedText("```", "$language\n${listing()}\n"))
         }
 
         override fun accept(visitor: MdVisitor) {

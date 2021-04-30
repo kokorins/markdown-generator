@@ -54,7 +54,7 @@ class MdTest : FunSpec({
     }
 
     test("link") {
-        val link = Md.Link("text", "url", false)
+        val link = Md.Word.Link("text", "url", false)
         val visitor = TextVisitor()
         link.accept(visitor)
         visitor.render() shouldBe """
@@ -63,7 +63,7 @@ class MdTest : FunSpec({
     }
 
     test("link-full-reference") {
-        val link = Md.Link("text", "url", false, "label")
+        val link = Md.Word.Link("text", "url", false, "label")
         val visitor = TextVisitor()
         link.accept(visitor)
         visitor.render() shouldBe """
@@ -74,7 +74,7 @@ class MdTest : FunSpec({
     }
 
     test("link-short-reference") {
-        val link = Md.Link("label", "url", false, "label")
+        val link = Md.Word.Link("label", "url", false, "label")
         val visitor = TextVisitor()
         link.accept(visitor)
         visitor.render() shouldBe """
@@ -85,7 +85,7 @@ class MdTest : FunSpec({
     }
 
     test("image") {
-        val link = Md.Link("text", "url", true)
+        val link = Md.Word.Link("text", "url", true)
         val visitor = TextVisitor()
         link.accept(visitor)
         visitor.render() shouldBe """
@@ -94,7 +94,7 @@ class MdTest : FunSpec({
     }
 
     test("image-short-link") {
-        val link = Md.Link("text", "url", true, "text")
+        val link = Md.Word.Link("text", "url", true, "text")
         val visitor = TextVisitor()
         link.accept(visitor)
         visitor.render() shouldBe """
@@ -105,7 +105,7 @@ class MdTest : FunSpec({
     }
 
     test("image-full-link") {
-        val link = Md.Link("text", "url", true, "1")
+        val link = Md.Word.Link("text", "url", true, "1")
         val visitor = TextVisitor()
         link.accept(visitor)
         visitor.render() shouldBe """
