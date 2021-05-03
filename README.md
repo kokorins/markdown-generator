@@ -60,11 +60,9 @@ This is a small test of how it looks like.
 
 ## Installation
 
-[![](https://jitpack.io/v/kokorins/markdown-generator.svg)](https://jitpack.io/#kokorins/markdown-generator)
-
 ```kotlin
 dependencies {
-    implementation("com.github.kokorins:markdown-generator:v0.1.0")
+    implementation("com.github.kokorins:markdown-generator:0.1.0")
 }
 ```
 

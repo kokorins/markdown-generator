@@ -10,7 +10,7 @@ object Md {
         fun accept(visitor: MdVisitor)
     }
 
-    abstract class MdContainer<T: MdElement> : MdElement {
+    abstract class MdContainer<T : MdElement> : MdElement {
         val elements = mutableListOf<T>()
         fun add(element: T): MdContainer<T> {
             elements.add(element)
@@ -37,7 +37,7 @@ object Md {
         }
     }
 
-    sealed class Word: MdElement {
+    sealed class Word : MdElement {
         data class Text(val text: String) : Word() {
             override fun accept(visitor: MdVisitor) {
                 visitor.visit(this)
@@ -73,7 +73,7 @@ object Md {
         }
 
         fun asText(): String? {
-            return if(isText()) {
+            return if (isText()) {
                 val textVisitor = TextVisitor()
                 accept(textVisitor)
                 textVisitor.render()
@@ -214,7 +214,7 @@ object Md {
         }
     }
 
-    class Itemize : MdContainer<Sentence>() {
+    class Itemize : MdContainer<MdElement>() {
         override fun accept(visitor: MdVisitor) {
             visitor.visit(this)
         }
@@ -223,15 +223,35 @@ object Md {
             add(Sentence().apply(block))
             return this
         }
+
+        fun itemize(block: Itemize.() -> Unit): Itemize {
+            add(Itemize().apply(block))
+            return this
+        }
+
+        fun enumerate(block: Enumerate.() -> Unit): Itemize {
+            add(Enumerate().apply(block))
+            return this
+        }
     }
 
-    class Enumerate : MdContainer<Sentence>() {
+    class Enumerate : MdContainer<MdElement>() {
         override fun accept(visitor: MdVisitor) {
             visitor.visit(this)
         }
 
         fun item(block: Sentence.() -> Unit): Enumerate {
             add(Sentence().apply(block))
+            return this
+        }
+
+        fun itemize(block: Itemize.() -> Unit): Enumerate {
+            add(Itemize().apply(block))
+            return this
+        }
+
+        fun enumerate(block: Enumerate.() -> Unit): Enumerate {
+            add(Enumerate().apply(block))
             return this
         }
     }

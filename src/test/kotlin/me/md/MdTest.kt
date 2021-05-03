@@ -128,6 +128,39 @@ class MdTest : FunSpec({
         """.trimIndent()
     }
 
+    test("multilayer-itemize") {
+        val itemize = Md.Itemize()
+        itemize.item { +"item 1" }
+        itemize.itemize { item { +"item 11" } }
+        val visitor = TextVisitor()
+        itemize.accept(visitor)
+        visitor.render() shouldBe """
+            - item 1
+              - item 11
+            
+        """.trimIndent()
+    }
+
+    test("multilayered-mixed-items") {
+        val itemize = Md.Itemize()
+        itemize.item { +"item 1" }
+        itemize.enumerate {
+            item { +"item 11" }
+            itemize {
+                item { +"item 111"}
+            }
+        }
+        val visitor = TextVisitor()
+        itemize.accept(visitor)
+        visitor.render() shouldBe """
+            - item 1
+              1. item 11
+                - item 111
+            
+        """.trimIndent()
+
+    }
+
     test("enumerate") {
         val enumerate = Md.Enumerate()
         enumerate.item { +"item 1" }

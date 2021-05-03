@@ -5,6 +5,7 @@ class TextVisitor : MdVisitor {
 
     private val builder = StringBuilder()
     private val links = mutableMapOf<String, LinkDefinition>()
+    private var itemLevel = -1
 
     fun render(): String {
         if (links.isNotEmpty()) {
@@ -75,19 +76,39 @@ class TextVisitor : MdVisitor {
     }
 
     override fun visit(itemize: Md.Itemize) {
-        itemize.elements.forEach { sentence ->
-            builder.append("- ")
-            sentence.accept(this)
-            builder.appendLine()
+        itemLevel += 1
+        itemize.elements.forEach {
+            when (it) {
+                is Md.Sentence -> {
+                    builder.append(" ".repeat(itemLevel * 2))
+                    builder.append("- ")
+                    it.accept(this)
+                    builder.appendLine()
+                }
+                else -> {
+                    it.accept(this)
+                }
+            }
         }
+        itemLevel -= 1
     }
 
     override fun visit(enumerate: Md.Enumerate) {
-        enumerate.elements.forEachIndexed { index, sentence ->
-            builder.append("${index + 1}. ")
-            sentence.accept(this)
-            builder.appendLine()
+        itemLevel += 1
+        enumerate.elements.forEachIndexed { index, it ->
+            when (it) {
+                is Md.Sentence -> {
+                    builder.append(" ".repeat(itemLevel * 2))
+                    builder.append("${index + 1}. ")
+                    it.accept(this)
+                    builder.appendLine()
+                }
+                else -> {
+                    it.accept(this)
+                }
+            }
         }
+        itemLevel -= 1
     }
 
     override fun visit(blockquotes: Md.Blockquotes) {
