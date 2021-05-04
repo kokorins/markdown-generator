@@ -301,7 +301,8 @@ class MdTest : FunSpec({
                 +"Introduction"
             }
             p {
-                +"This is a small test of how it looks like."
+                +"This is a small test of how it looks like."; br()
+                +"This test on a new line."
             }
 
             line()
@@ -309,6 +310,11 @@ class MdTest : FunSpec({
             itemize {
                 item {
                     +"Just an item " + link("link 1", "url1")
+                }
+                itemize {
+                    item {
+                        +"Just nested item"
+                    }
                 }
             }
 
@@ -334,10 +340,12 @@ class MdTest : FunSpec({
             ## Introduction
             
             This is a small test of how it looks like.
+            This test on a new line.
             
             ---
             
             - Just an item [link 1](url1)
+              - Just nested item
             
             1. Just an enumerated item ![link 2]
             
