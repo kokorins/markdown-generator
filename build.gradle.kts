@@ -2,8 +2,12 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     `maven-publish` // for jitpack
-    kotlin("jvm") version "1.4.32"
+    kotlin("jvm") version "1.5.0"
     jacoco
+}
+
+jacoco {
+    toolVersion = "0.8.7"
 }
 
 group = "com.github.kokorins"
@@ -18,7 +22,6 @@ tasks {
     }
     withType<Test> {
         testLogging {
-            outputs.upToDateWhen { false }
             showStandardStreams = true
         }
         useJUnitPlatform()
