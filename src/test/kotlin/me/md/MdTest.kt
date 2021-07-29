@@ -298,7 +298,7 @@ class MdTest : FunSpec({
                 +"My Markdown Document"
             }
             h(2) {
-                +"Introduction"
+                +"Introduction with " + link("link", "url2", "link 2")
             }
             p {
                 +"This is a small test of how it looks like."; br()
@@ -332,12 +332,20 @@ class MdTest : FunSpec({
                     +"Another Blockquote line"
                 }
             }
+
+            code("language") {
+                """
+                    fun someCode(): String {
+                        Just an example of code
+                    }
+                """.trimIndent()
+            }
         }
 
         doc.asString() shouldBe """
             # My Markdown Document
             
-            ## Introduction
+            ## Introduction with [link][link 2]
             
             This is a small test of how it looks like.
             This test on a new line.
@@ -352,6 +360,11 @@ class MdTest : FunSpec({
             > Blockquote line [link 3][link 2]
             > Another Blockquote line
             
+            ```language
+            fun someCode(): String {
+                Just an example of code
+            }
+            ```
             
             [link 2]: url2
             

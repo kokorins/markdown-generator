@@ -32,6 +32,13 @@ val doc = Md.generate {
             +"Another Blockquote line"
         }
     }
+    code("language") {
+        """
+                    fun someCode(): String {
+                        Just an example of code
+                    }
+                """.trimIndent()
+    }
 }
 
 doc.asString()
@@ -53,6 +60,11 @@ This is a small test of how it looks like.
 > Blockquote line [link 3][link 2]
 > Another Blockquote line
 
+```language
+fun someCode(): String {
+    Just an example of code
+}
+```
 
 [link 2]: url2
             

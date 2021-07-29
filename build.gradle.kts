@@ -2,7 +2,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     `maven-publish` // for jitpack
-    kotlin("jvm") version "1.5.0"
+    kotlin("jvm") version "1.5.21"
     jacoco
 }
 
@@ -28,8 +28,8 @@ tasks {
     }
 }
 
-val slf4j = "1.7.30"
-val kotest = "4.4.3"
+val slf4j = "1.7.32"
+val kotest = "4.6.1"
 
 dependencies {
     implementation(kotlin("stdlib"))
