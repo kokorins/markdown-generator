@@ -5,6 +5,14 @@
 
 Simple library to generate markdown from kotlin.
 
+The design on generator bases on two building blocks:
+
+- Markdown document is a sequence of independent paragraphs
+- Each paragraph consists of a sequence of lines (also called items)
+
+The standard way of generating something in Kotlin is usage of builder pattern and the library is trying to follow
+this idea.
+
 It allows transform code like:
 
 ```kotlin
@@ -35,10 +43,10 @@ val doc = Md.generate {
     }
     code("language") {
         """
-                    fun someCode(): String {
-                        Just an example of code
-                    }
-                """.trimIndent()
+            fun someCode(): String {
+                Just an example of code
+            }
+        """.trimIndent()
     }
 }
 
@@ -75,7 +83,7 @@ fun someCode(): String {
 
 ```kotlin
 dependencies {
-    implementation("com.github.kokorins:markdown-generator:0.1.0")
+    implementation("com.github.kokorins:markdown-generator:<version>")
 }
 ```
 
