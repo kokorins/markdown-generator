@@ -1,5 +1,6 @@
-# markdown-generator
+# Markdown Generator in Kotlin
 
+[![Java CI with Gradle](https://github.com/kokorins/markdown-generator/actions/workflows/gradle.yml/badge.svg)](https://github.com/kokorins/markdown-generator/actions/workflows/gradle.yml)
 [![](https://jitpack.io/v/kokorins/markdown-generator.svg)](https://jitpack.io/#kokorins/markdown-generator)
 
 Simple library to generate markdown from kotlin.
