@@ -55,7 +55,7 @@ doc.asString()
 
 into
 
-```markdown
+---
 # My Markdown Document
 
 ## Introduction
@@ -76,8 +76,8 @@ fun someCode(): String {
 ```
 
 [link 2]: url2
-            
-```
+
+---
 
 ## Installation
 
