@@ -41,7 +41,7 @@ val doc = Md.generate {
             +"Another Blockquote line"
         }
     }
-    code("language") {
+    code("kotlin") {
         """
             fun someCode(): String {
                 Just an example of code
@@ -50,7 +50,7 @@ val doc = Md.generate {
     }
 }
 
-doc.asString()
+return doc.asString()
 ```
 
 into
@@ -69,7 +69,7 @@ This is a small test of how it looks like.
 > Blockquote line [link 3][link 2]
 > Another Blockquote line
 
-```language
+```kotlin
 fun someCode(): String {
     Just an example of code
 }
