@@ -36,20 +36,20 @@ class TextVisitor : MdVisitor {
             links[link.label] = LinkDefinition(link.label, link.url)
             val text = link.text.asText()
             if (text == link.label) { // short reference
-                if (link.inPlace) {
+                if (link.inPlace) { // image
                     builder.append("!")
                 }
                 builder.append("[${link.label}]")
-            } else {
-                if (link.inPlace) {
+            } else { // full reference
+                if (link.inPlace) { // image
                     builder.append("!")
                 }
                 builder.append("[")
                 link.text.accept(this)
                 builder.append("][${link.label}]")
             }
-        } else {
-            if (link.inPlace) {
+        } else { // in text link
+            if (link.inPlace) { // image
                 builder.append("!")
             }
             builder.append("[")

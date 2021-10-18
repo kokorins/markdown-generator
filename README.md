@@ -19,7 +19,7 @@ It allows transform code like:
 val doc = Md.generate {
     title { +"My Markdown Document" }
     h(2) { +"Introduction" }
-    p { +"This is a small test of how it looks like." }
+    p { +"This is a small test of how it looks like."; br(); +"Text on a new line." }
 
     itemize {
         item {
@@ -61,6 +61,7 @@ into
 ## Introduction
 
 This is a small test of how it looks like.
+Text on a new line.
 
 - Just an item [link 1](url1)
 

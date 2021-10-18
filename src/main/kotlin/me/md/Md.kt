@@ -51,15 +51,17 @@ object Md {
         }
 
         data class Link(
-                val text: Sentence,
-                val url: String,
-                val inPlace: Boolean,
-                val label: String? = null
+            val text: Sentence,
+            val url: String,
+            val inPlace: Boolean,
+            val label: String? = null
         ) : Word() {
-            constructor(text: String,
-                        url: String,
-                        inPlace: Boolean,
-                        label: String? = null) : this(Sentence().text(text), url, inPlace, label)
+            constructor(
+                text: String,
+                url: String,
+                inPlace: Boolean,
+                label: String? = null
+            ) : this(Sentence().text(text), url, inPlace, label)
 
             override fun accept(visitor: MdVisitor) {
                 visitor.visit(this)
@@ -164,6 +166,11 @@ object Md {
 
         fun link(text: String, url: String, label: String? = null): Sentence {
             current.add(Word.Link(Sentence().text(text), url, false, label))
+            return current
+        }
+
+        fun labeled(label: String, text: String = label, url: () -> String): Sentence {
+            current.add(Word.Link(Sentence().text(text), url(), false, label))
             return current
         }
 

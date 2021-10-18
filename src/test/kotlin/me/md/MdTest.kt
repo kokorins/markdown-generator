@@ -291,6 +291,29 @@ class MdTest : FunSpec({
         """.trimIndent()
     }
 
+    test("labeled") {
+        val doc = Md.generate {
+            p {
+                labeled("code") {
+                """ 
+                ```
+                    fun someCode() {}
+                ```
+                """.trimIndent()
+                }
+            }
+        }.asString()
+
+        doc shouldBe """
+            [code]
+            
+            
+            [code]: ```
+                fun someCode() {}
+            ```
+            
+            """.trimIndent()
+    }
 
     test("doc") {
         val doc = Md.generate {
